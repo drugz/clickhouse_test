@@ -1,5 +1,10 @@
 # clickhouse_test
-Test project
+## Test project
+
+### Run docker container with Clickhouse and SvelteKit
+```
+docker-compose -f docker-compose.yml up -d
+```
 
 Tasks:
 1. Create a Clickhouse database (spin a local CH server)
