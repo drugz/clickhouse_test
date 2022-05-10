@@ -1,0 +1,41 @@
+version: "3.7"
+services:
+
+  sveltekit:
+    image: sveltekit
+    restart: on-failure
+    build:
+      context: ./sveltekit
+      dockerfile: ./Dockerfile.dev
+    ports:
+      - 24678:24678
+      - 3000:3000
+    volumes:
+      - ./sveltekit/:/usr/src/app
+      - /usr/src/app/node_modules
+      
+
+  ch_server:
+    image: yandex/clickhouse-server
+    ports:
+      - "8123:8123"
+    volumes:
+      - ./clickhouse:/var/lib/clickhouse
+    networks:
+        - ch_ntw
+
+  ch_client:
+    image: yandex/clickhouse-client
+    entrypoint:
+      - /bin/sleep
+    command:
+      - infinity
+    networks:
+        - ch_ntw
+
+networks:
+  ch_ntw:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.222.1.0/24
