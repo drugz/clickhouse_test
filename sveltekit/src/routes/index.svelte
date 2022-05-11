@@ -1,2 +1,12 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script context="module">
+	// export const prerender = true;
+	export const load = async () => {
+		const pinging = await fetch('http://localhost:3000/api/ping');
+		let body = await pinging.json();
+		return {
+			props: {
+				ping: body.message || ''
+			}
+		};
+	};
+</script>
