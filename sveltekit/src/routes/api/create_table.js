@@ -5,7 +5,7 @@ export async function get() {
     // -- cart_products: id, product_id, amount
     // -- coupons: id, discount_value (% of product price)
     const queries = [
-        "CREATE TABLE IF NOT EXISTS products (id UUID NOT NULL, price Decimal(9,2), nodiscount_flag UInt8) ENGINE = Memory",
+        "CREATE TABLE IF NOT EXISTS products (id UUID NOT NULL, price Decimal(9,2), nodiscount_flag BOOL) ENGINE = GenerateRandom(1, 5, 3)",
         "CREATE TABLE IF NOT EXISTS cart_products (id UUID NOT NULL, product_id UUID, amount Int16) ENGINE = Memory",
         "CREATE TABLE IF NOT EXISTS coupons (id UUID NOT NULL, discount_value Decimal(3,2)) ENGINE = Memory",
     ];
