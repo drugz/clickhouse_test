@@ -45,7 +45,7 @@
 		</status>
 	{/if}
 	<br />
-	<button on:click={createClickhouseTable}>Create table</button>
+	<button on:click={createClickhouseTable}>Create tables</button>
 	{#if status_create_tables}
 		<status transition:fade>
 			{status_create_tables}
@@ -56,3 +56,12 @@
 	<status transition:fade>No connection to ClickHouse</status>
 {/if}
 
+<style>
+	h1,
+	h2,
+	button,
+	status {
+		margin: 10px;
+		padding: 10px;
+	}
+</style>
