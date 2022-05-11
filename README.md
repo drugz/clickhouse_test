@@ -1,7 +1,8 @@
 # clickhouse_test
 ## Test project
 
-### Run docker container with Clickhouse and SvelteKit
+### Run docker container with local Clickhouse and SvelteKit
+Make copy of .env.example and rename it to .env.
 ```
 docker-compose -f docker-compose.yml up -d
 ```
