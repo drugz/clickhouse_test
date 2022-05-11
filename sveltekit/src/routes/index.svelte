@@ -15,17 +15,29 @@
 	import { fade } from 'svelte/transition';
 	export let ping: string;
 	let status_create_database = '';
-	async function createClickhouseDB(): Promise<void> {
-		const response = await fetch('/api/create_db');
-		let body = await response.json();
-		status_create_database = body.message || 'Sorry. Some error';
+	let status_create_tables = '';
+	let status_populate = '';
+	async function apiGet(url: string): Promise<string> {
+		try {
+			const response = await fetch(url);
+			let body = await response.json();
+			return body.message;
+		} catch (error) {
+			console.log(error);
+			return 'Sorry. Some error. Try again later';
+		}
 	}
 
-	let status_create_tables = '';
+	async function createClickhouseDB(): Promise<void> {
+		status_create_database = await apiGet('/api/create_db');
+	}
+
 	async function createClickhouseTable(): Promise<void> {
-		const response = await fetch('/api/create_table');
-		let body = await response.json();
-		status_create_tables = body.message || 'Sorry. Some error';
+		status_create_tables = await apiGet('/api/create_table');
+	}
+
+	async function populateClickhouseTable(): Promise<void> {
+		status_populate = await apiGet('/api/populate');
 	}
 </script>
 
@@ -52,6 +64,13 @@
 		</status>
 	{/if}
 	<br />
+	<button on:click={populateClickhouseTable}>Populate data</button>
+	{#if status_populate}
+		<status transition:fade>
+			{status_populate}
+		</status>
+	{/if}
+	<br />
 {:else}
 	<status transition:fade>No connection to ClickHouse</status>
 {/if}
@@ -63,5 +82,6 @@
 	status {
 		margin: 10px;
 		padding: 10px;
+		min-width: 150px;
 	}
 </style>
