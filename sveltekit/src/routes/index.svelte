@@ -21,6 +21,12 @@
 		status_create_database = body.message || 'Sorry. Some error';
 	}
 
+	let status_create_tables = '';
+	async function createClickhouseTable(): Promise<void> {
+		const response = await fetch('/api/create_table');
+		let body = await response.json();
+		status_create_tables = body.message || 'Sorry. Some error';
+	}
 </script>
 
 <h1>Demo app</h1>
@@ -36,6 +42,13 @@
 	{#if status_create_database}
 		<status transition:fade>
 			{status_create_database}
+		</status>
+	{/if}
+	<br />
+	<button on:click={createClickhouseTable}>Create table</button>
+	{#if status_create_tables}
+		<status transition:fade>
+			{status_create_tables}
 		</status>
 	{/if}
 	<br />
