@@ -7,9 +7,23 @@ const config = {
 	// for more information about preprocessors
 	preprocess: preprocess(),
 
+	experimental: {
+		useVitePreprocess: true
+	},
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		vite: {
+			server: {
+				watch: {
+					usePolling: true,
+				},
+				hmr: {
+					port: 24678,
+				},
+			},
+		},
 	}
+
 };
 
 export default config;
