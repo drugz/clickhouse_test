@@ -19,7 +19,7 @@ Tasks:
 
  ✅ coupons: id, discount_value (% of product price)
 
-3. Populate it with some random test data
+3. ✅ Populate it with some random test data
 
 4. Todo: write an SQL query calculating the final price of a customer's cart, keeping in mind that:
 
