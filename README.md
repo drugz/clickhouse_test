@@ -8,14 +8,17 @@ docker-compose -f docker-compose.yml up -d
 ```
 
 Tasks:
-1. Create a Clickhouse database (spin a local CH server)
 
-2. Create the following tables (inspired by our Food delivery app):
+1.✅ Create a Clickhouse database (spin a local CH server) 
 
-```
--- products: id, price, no_discount_flag (bool)
--- cart_products: id, product_id, amount
--- coupons: id, discount_value (% of product price)
+2.✅ Create the following tables (inspired by our Food delivery app): 
+
+ ✅ products: id, price, no_discount_flag (bool)
+
+ ✅ cart_products: id, product_id, amount
+
+ ✅ coupons: id, discount_value (% of product price)
+
 3. Populate it with some random test data
 
 4. Todo: write an SQL query calculating the final price of a customer's cart, keeping in mind that:
