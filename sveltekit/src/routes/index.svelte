@@ -93,6 +93,57 @@
 		</status>
 	{/if}
 	<br />
+	<lists>
+		{#if products.length}
+			<list transition:fade>
+				<h3>Products</h3>
+				<product>
+					<p>ID</p>
+					<p>Price</p>
+					<p>In Discount</p>
+				</product>
+				<VirtualScroll let:data data={products} key="id">
+					<product>
+						<ids>{data.id}</ids>
+						<p>$ {Math.abs(data.price)}</p>
+						<p>{data.no_discount_flag == true ? 'common' : 'discount'}</p>
+					</product>
+				</VirtualScroll>
+			</list>
+		{/if}
+		{#if coupons.length}
+			<list transition:fade>
+				<h3>Coupons</h3>
+				<product>
+					<p>ID</p>
+					<p>Discount value</p>
+				</product>
+				<VirtualScroll let:data data={coupons} key="id">
+					<product>
+						<ids>{data.id}</ids>
+						<p>{Math.abs(data.discount_value)}%</p>
+					</product>
+				</VirtualScroll>
+			</list>
+		{/if}
+		{#if cart_products.length}
+			<list transition:fade>
+				<h3>Cart. Total cost: $ {total_cart_price}</h3>
+				<product>
+					<p>ID</p>
+					<p>Product ID</p>
+					<p>Amount</p>
+				</product>
+				<VirtualScroll let:data data={cart_products} key="id">
+					<product>
+						<ids>{data.id}</ids>
+						<ids>{data.product_id}</ids>
+						<p>{Math.abs(data.amount)}</p>
+					</product>
+				</VirtualScroll>
+			</list>
+		{/if}
+	</lists>
 {:else}
 	<status transition:fade>No connection to ClickHouse</status>
 {/if}
