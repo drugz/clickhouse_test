@@ -19,7 +19,7 @@
 	let status_create_database = '';
 	let status_create_tables = '';
 	let status_populate = '';
-	async function apiGet(url: string): Promise<string> {
+	async function getStatus(url: string): Promise<string> {
 		try {
 			const response = await fetch(url);
 			let body = await response.json();
@@ -31,15 +31,15 @@
 	}
 
 	async function createClickhouseDB(): Promise<void> {
-		status_create_database = await apiGet('/api/create_db');
+		status_create_database = await getStatus('/api/create_db');
 	}
 
 	async function createClickhouseTable(): Promise<void> {
-		status_create_tables = await apiGet('/api/create_table');
+		status_create_tables = await getStatus('/api/create_table');
 	}
 
 	async function populateClickhouseTable(): Promise<void> {
-		status_populate = await apiGet('/api/populate');
+		status_populate = await getStatus('/api/populate');
 	}
 </script>
 
