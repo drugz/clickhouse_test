@@ -63,35 +63,38 @@
 	}
 </script>
 
-<h1>Demo app</h1>
-<h2>SvelteKit & ClickHouse DB</h2>
-<hr />
+<h1>
+	SvelteKit & ClickHouse DB
+	<small>Demo app</small>
+</h1>
 {#if ping}
-	<status transition:fade>
-		{ping}
-	</status>
+	<fieldset id="form">
+		<status transition:fade>
+			<label for="form">{ping}</label>
+		</status>
 
-	<br />
-	<button on:click={createClickhouseDB}>Create database</button>
-	{#if status_create_database}
-		<status transition:fade>
-			{status_create_database}
-		</status>
-	{/if}
-	<br />
-	<button on:click={createClickhouseTable}>Create tables</button>
-	{#if status_create_tables}
-		<status transition:fade>
-			{status_create_tables}
-		</status>
-	{/if}
-	<br />
-	<button on:click={populateClickhouseTable}>Populate data</button>
-	{#if status_populate}
-		<status transition:fade>
-			{status_populate}
-		</status>
-	{/if}
+		<br />
+		<button on:click={createClickhouseDB}>Create database</button>
+		{#if status_create_database}
+			<status transition:fade>
+				{status_create_database}
+			</status>
+		{/if}
+		<br />
+		<button on:click={createClickhouseTable}>Create tables</button>
+		{#if status_create_tables}
+			<status transition:fade>
+				{status_create_tables}
+			</status>
+		{/if}
+		<br />
+		<button on:click={populateClickhouseTable}>Populate data</button>
+		{#if status_populate}
+			<status transition:fade>
+				{status_populate}
+			</status>
+		{/if}
+	</fieldset>
 	<br />
 	<lists>
 		{#if products.length}
@@ -151,10 +154,61 @@
 <style>
 	h1,
 	h2,
+	h3,
 	button,
 	status {
 		margin: 10px;
 		padding: 10px;
 		min-width: 150px;
+	}
+	product {
+		font-size: small;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		border: 1px solid #ccc;
+		padding: 10px;
+		margin: 10px;
+		min-height: 50px;
+		border-radius: 5px;
+	}
+	lists {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-evenly;
+		flex-wrap: nowrap;
+		align-items: flex-start;
+		align-content: center;
+	}
+	list {
+		height: 400px;
+		min-width: 30%;
+	}
+	ids {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		width: 50px;
+		white-space: nowrap;
+		font-size: x-small;
+		transition: all 0.53s ease;
+		display: flex;
+		min-height: 100%;
+		margin: 15px 0;
+	}
+	ids:hover {
+		font-size: xx-small;
+		background-color: #fff;
+		overflow: overlay;
+		text-overflow: unset;
+		min-width: 70%;
+		white-space: pre-line;
+		display: block;
+		transition: all 0.5s ease;
+	}
+	ids:hover + * {
+		transition: all 0.3s ease;
+		display: none;
+		opacity: 0;
 	}
 </style>
