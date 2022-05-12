@@ -4,14 +4,20 @@ export async function get() {
     // -- products: id, price, no_discount_flag (bool)
     // -- cart_products: id, product_id, amount
     // -- coupons: id, discount_value (% of product price)
-   const queries = [
-        "CREATE TABLE IF NOT EXISTS products (id UUID NOT NULL, price Decimal(9,2), nodiscount_flag BOOL) ENGINE = GenerateRandom(1, 5, 3)",
+
+    const dropQueries = [
+        "DROP TABLE IF EXISTS products",
+        "DROP TABLE IF EXISTS cart_products",
+        "DROP TABLE IF EXISTS coupons",
+    ];
+    const queries = [
+        "CREATE TABLE IF NOT EXISTS products (id UUID NOT NULL, price UInt8, no_discount_flag Nullable(BOOLEAN)) ENGINE = GenerateRandom(NULL, 2, 3)",
         "CREATE TABLE IF NOT EXISTS cart_products (id UUID NOT NULL, product_id UUID, amount TINYINT) ENGINE = Memory",
-        "CREATE TABLE IF NOT EXISTS coupons (id UUID NOT NULL, discount_value TINYINT) ENGINE = GenerateRandom(1, 5, 3)",
+        "CREATE TABLE IF NOT EXISTS coupons (id UUID NOT NULL, discount_value TINYINT) ENGINE = GenerateRandom(1, 2, 3)",
     ];
     try {
-        const promises = await (Promise.all(queries.map(query => clickhouse.queryPromise(query))));
-        console.log(promises);
+        await (Promise.all(dropQueries.map(query => clickhouse.queryPromise(query))));
+        await (Promise.all(queries.map(query => clickhouse.queryPromise(query))));
     } catch (e) {
         console.log(e);
         return {
