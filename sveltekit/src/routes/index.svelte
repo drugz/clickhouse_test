@@ -13,6 +13,8 @@
 
 <script lang="ts">
 	import { fade } from 'svelte/transition';
+	import { VirtualScroll } from 'svelte-virtual-scroll-list';
+
 	export let ping: string;
 	let status_create_database = '';
 	let status_create_tables = '';
