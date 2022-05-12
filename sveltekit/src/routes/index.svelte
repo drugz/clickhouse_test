@@ -19,6 +19,11 @@
 	let status_create_database = '';
 	let status_create_tables = '';
 	let status_populate = '';
+	let products = [];
+	let coupons = [];
+	let cart_products = [];
+	let total_cart_price = 0;
+
 	async function getStatus(url: string): Promise<string> {
 		try {
 			const response = await fetch(url);
@@ -27,6 +32,17 @@
 		} catch (error) {
 			console.log(error);
 			return 'Sorry. Some error. Try again later';
+		}
+	}
+	async function getData(datatype: string, limit = 10): Promise<Array> {
+		try {
+			const response = await fetch(`/api/getdata/${datatype}-${limit}`);
+			let body = await response.json();
+			console.log(body);
+			return body.data;
+		} catch (error) {
+			console.log(error);
+			return ['Sorry. Some error. Try again later'];
 		}
 	}
 
@@ -40,6 +56,10 @@
 
 	async function populateClickhouseTable(): Promise<void> {
 		status_populate = await getStatus('/api/populate');
+		products = await getData('products', 100);
+		coupons = await getData('coupons');
+		cart_products = await getData('cart_products');
+		total_cart_price = await getData('total_cart_price');
 	}
 </script>
 
