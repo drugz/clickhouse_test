@@ -15,15 +15,14 @@ const config = {
 		vite: {
 			server: {
 				watch: {
-					usePolling: true,
+					usePolling: true
 				},
 				hmr: {
-					port: 24678,
-				},
-			},
-		},
+					port: 24678
+				}
+			}
+		}
 	}
-
 };
 
 export default config;
