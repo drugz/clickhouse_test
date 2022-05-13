@@ -5,7 +5,6 @@ export async function get({ params }) {
     let datatype = params.datatype || 'default';
 
     try {
-        // выбираем id первые limit записей
         const handlers = {
 			products: async () => {
 				return await clickhouse.queryPromise(`select * from products limit ${limit}`);
@@ -42,15 +41,15 @@ export async function get({ params }) {
                 data: data || handlers.default,
                 result: true
             }
-        }
+		};
     } catch (e) {
         console.log(e);
         return {
             status: 500,
             body: {
-                message: "error inserting into cart_products",
+				message: 'error inserting into cart_products',
                 result: false
             }
+		};
         }
     }
-}
