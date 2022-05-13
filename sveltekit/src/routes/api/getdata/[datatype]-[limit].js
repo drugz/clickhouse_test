@@ -1,11 +1,11 @@
 import clickhouse from '$lib/clickhouse.js';
 
 export async function get({ params }) {
-    let limit = params.limit || 10;
-    let datatype = params.datatype || 'default';
+	let limit = params.limit || 10;
+	let datatype = params.datatype || 'default';
 
-    try {
-        const handlers = {
+	try {
+		const handlers = {
 			products: async () => {
 				return await clickhouse.queryPromise(`select * from products limit ${limit}`);
 			},
@@ -33,23 +33,23 @@ export async function get({ params }) {
 				return await clickhouse.queryPromise(`WITH (SELECT min2(SUM(d),100) AS d FROM (SELECT min2(abs(coupons.discount_value)/10,30) AS d FROM coupons limit ${limit} ) as c) AS discount SELECT SUM(no_discount_flag!=true ? p.price*cart.amount : p.price*cart.amount*0.01*(100-discount)) AS total_cost, total_cost*1.1 as taxed_cost FROM (SELECT * FROM cart_products) AS cart INNER JOIN (SELECT * FROM products limit 100) AS p ON (p.id=cart.product_id)`)
 			},
 			default: ['no data']
-        };
-        let data = await handlers[datatype]();
-        return {
-            status: 200,
-            body: {
-                data: data || handlers.default,
-                result: true
-            }
 		};
-    } catch (e) {
-        console.log(e);
-        return {
-            status: 500,
-            body: {
+		let data = await handlers[datatype]();
+		return {
+			status: 200,
+			body: {
+				data: data || handlers.default,
+				result: true
+			}
+		};
+	} catch (e) {
+		console.log(e);
+		return {
+			status: 500,
+			body: {
 				message: 'error inserting into cart_products',
-                result: false
-            }
+				result: false
+			}
 		};
-        }
-    }
+	}
+}
