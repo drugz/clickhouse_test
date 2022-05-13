@@ -7,7 +7,7 @@ export async function get() {
 		return {
 			status: 200,
 			body: {
-				message: 'ClickHouse is alive',
+				message: 'ClickHouse works',
 				result: true
 			}
 		};
