@@ -2,7 +2,7 @@
 ## Test project
 
 ### Run docker container with local Clickhouse and SvelteKit
-Make copy of .env.example and rename it to .env.
+<!-- Make copy of .env.example and rename it to .env. -->
 ```
 docker-compose -f docker-compose.yml up -d
 ```
@@ -21,7 +21,7 @@ Tasks:
 
 3. ✅ Populate it with some random test data
 
-4. Todo: write an SQL query calculating the final price of a customer's cart, keeping in mind that:
+4. ✅ Todo: write an SQL query calculating the final price of a customer's cart, keeping in mind that:
 
 - cart_products may contain both no_discount and discounted products
 
