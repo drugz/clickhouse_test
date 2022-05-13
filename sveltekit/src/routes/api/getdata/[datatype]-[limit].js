@@ -7,12 +7,13 @@ export async function get({ params }) {
     try {
         // выбираем id первые limit записей
         const handlers = {
-            products: async () => { return await clickhouse.queryPromise(`select * from products limit ${limit}`) },
-            coupons: async () => { return await clickhouse.queryPromise(`select * from coupons limit ${limit}`) },
-            cart_products: async () => { return await clickhouse.queryPromise(`select * from cart_products limit ${limit}`) },
-            // total_cart_price: async () => { return await clickhouse.queryPromise(`select * from cart_products limit ${limit}`) },
-            total_cart_price: 0,
-            default: ["no data"],
+			products: async () => {
+				return await clickhouse.queryPromise(`select * from products limit ${limit}`);
+			},
+			coupons: async () => {
+				// get some limit number of coupones from randomed table, which less than 30%
+				return await clickhouse.queryPromise(`SELECT coupons.id, min2(abs(coupons.discount_value)/10,30) AS discount_value FROM coupons limit ${limit}`);
+			},
         };
         let data = await handlers[datatype]();
         return {
