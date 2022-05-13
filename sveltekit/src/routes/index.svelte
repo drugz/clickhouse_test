@@ -16,7 +16,6 @@
 	import { VirtualScroll } from 'svelte-virtual-scroll-list';
 
 	export let ping: string;
-	let status_create_database = '';
 	let status_create_tables = '';
 	let status_populate = '';
 	let products: any[] | undefined = [];
@@ -76,11 +75,15 @@
 	<small>Demo app</small>
 </h1>
 {#if ping}
-	<fieldset id="form">
-		<status transition:fade>
-			<label for="form">{ping}</label>
+	<div id="form">
+		<status>
+			<svg width="10" height="10">
+				<circle cx="50%" cy="50%" r="5" fill="lightgreen" />
+			</svg>
+			<a href="http://localhost:8123/play" target="_blank" transition:fade>
+				{ping}
+			</a>
 		</status>
-
 		<br />
 		<button on:click={createClickhouseTable}>Recreate tables</button>
 		{#if status_create_tables}
@@ -95,7 +98,7 @@
 				{status_populate}
 			</status>
 		{/if}
-	</fieldset>
+	</div>
 	<br />
 	<lists>
 		{#if products.length}
@@ -107,10 +110,15 @@
 					<p>In Discount</p>
 				</product>
 				<VirtualScroll let:data data={products} key="id">
-					<product>
-						<ids>{data.id}</ids>
-						<p>$ {Math.abs(data.price)}</p>
-						<p>{data.no_discount_flag == true ? 'common' : 'discount'}</p>
+					<product class:discount_flag={!data.no_discount_flag}>
+						<ids>
+							<svg width="10" height="10">
+								<circle cx="50%" cy="50%" r="5" fill={products_color?.get(data.id)} />
+							</svg>
+							{data.id}
+						</ids>
+						<p>${Math.abs(data.price)}</p>
+						<p>{data.no_discount_flag == true ? 'standart' : 'discount'}</p>
 					</product>
 				</VirtualScroll>
 			</list>
@@ -168,18 +176,29 @@
 		{/if}
 	</lists>
 {:else}
-	<status transition:fade>No connection to ClickHouse</status>
+	<status transition:fade>
+		<svg width="10" height="10">
+			<circle cx="50%" cy="50%" r="5" fill="red" />
+		</svg>
+		<a href="http://localhost:8123" target="_blank"> No connection to ClickHouse </a>
+	</status>
 {/if}
 
 <style>
 	h1,
-	h2,
 	h3,
 	button,
+	#form,
 	status {
 		margin: 10px;
 		padding: 10px;
 		min-width: 150px;
+	}
+	.headline {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
 	}
 	product {
 		font-size: small;
@@ -192,6 +211,9 @@
 		margin: 10px;
 		min-height: 50px;
 		border-radius: 5px;
+	}
+	.discount_flag {
+		border: 5px #ffee00 solid;
 	}
 	lists {
 		display: flex;
@@ -212,7 +234,7 @@
 		white-space: nowrap;
 		font-size: x-small;
 		transition: all 0.53s ease;
-		display: flex;
+		display: block;
 		min-height: 100%;
 		margin: 15px 0;
 	}
