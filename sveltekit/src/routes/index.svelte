@@ -46,10 +46,6 @@
 		}
 	}
 
-	async function createClickhouseDB(): Promise<void> {
-		status_create_database = await getStatus('/api/create_db');
-	}
-
 	async function createClickhouseTable(): Promise<void> {
 		status_create_tables = await getStatus('/api/create_table');
 	}
@@ -74,14 +70,7 @@
 		</status>
 
 		<br />
-		<button on:click={createClickhouseDB}>Create database</button>
-		{#if status_create_database}
-			<status transition:fade>
-				{status_create_database}
-			</status>
-		{/if}
-		<br />
-		<button on:click={createClickhouseTable}>Create tables</button>
+		<button on:click={createClickhouseTable}>Recreate tables</button>
 		{#if status_create_tables}
 			<status transition:fade>
 				{status_create_tables}

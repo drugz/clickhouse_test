@@ -16,8 +16,10 @@ export async function get() {
         "CREATE TABLE IF NOT EXISTS coupons (id UUID NOT NULL, discount_value TINYINT) ENGINE = GenerateRandom(1, 2, 3)",
     ];
     try {
-        await (Promise.all(dropQueries.map(query => clickhouse.queryPromise(query))));
-        await (Promise.all(queries.map(query => clickhouse.queryPromise(query))));
+		// create default database if not exists
+		await clickhouse.queryPromise(
+			"CREATE DATABASE IF NOT EXISTS default ENGINE = Memory COMMENT 'The test database'"
+		);
     } catch (e) {
         console.log(e);
         return {
