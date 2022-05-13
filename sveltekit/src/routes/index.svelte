@@ -89,7 +89,7 @@
 			</status>
 		{/if}
 		<br />
-		<button on:click={populateClickhouseTable}>Populate data</button>
+		<button on:click={populateClickhouseTable}>Refill cart</button>
 		{#if status_populate}
 			<status transition:fade>
 				{status_populate}
@@ -139,15 +139,29 @@
 					<span>${total_taxed_cost.toFixed(2)}<smal>(with 10% tax)</smal></span>
 				</h3>
 				<product>
-					<p>ID</p>
-					<p>Product ID</p>
+					<!-- <p>ID</p> -->
+					<p>{cart_products.length} Products</p>
 					<p>Amount</p>
+					<p>Total cost: <br />${total_cart_cost.toFixed(2)}</p>
 				</product>
 				<VirtualScroll let:data data={cart_products} key="id">
-					<product>
-						<ids>{data.id}</ids>
-						<ids>{data.product_id}</ids>
+					<product class:discount_flag={!data.no_discount_flag}>
+						<!-- <ids>{data.id}</ids> -->
+						<ids>
+							<svg width="10" height="10">
+								<circle cx="50%" cy="50%" r="5" fill={products_color?.get(data.product_id)} />
+							</svg>
+							{data.product_id}
+						</ids>
 						<p>{Math.abs(data.amount)}</p>
+						<p>
+							{#if data.no_discount_flag == true}
+								${Math.abs(data.amount * data.price).toFixed(2)}
+							{:else}
+								<strike>${Math.abs(data.amount * data.price).toFixed(2)}</strike><br />
+								${Math.abs(data.amount * data.price * (1 - discount_value / 100)).toFixed(2)}
+							{/if}
+						</p>
 					</product>
 				</VirtualScroll>
 			</list>
