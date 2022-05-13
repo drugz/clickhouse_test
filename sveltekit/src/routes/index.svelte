@@ -19,10 +19,13 @@
 	let status_create_database = '';
 	let status_create_tables = '';
 	let status_populate = '';
-	let products = [];
-	let coupons = [];
-	let cart_products = [];
-	let total_cart_price = 0;
+	let products: any[] | undefined = [];
+	let products_color: Map<String, String> | undefined = new Map();
+	let coupons: any[] | undefined = [];
+	let cart_products: any[] | undefined = [];
+	let total_cart_cost = 0;
+	let total_taxed_cost = 0;
+	let discount_value = 0;
 
 	async function getStatus(url: string): Promise<string> {
 		try {
@@ -38,7 +41,7 @@
 		try {
 			const response = await fetch(`/api/getdata/${datatype}-${limit}`);
 			let body = await response.json();
-			console.log(body);
+			// console.log(body);
 			return body.data;
 		} catch (error) {
 			console.log(error);
@@ -53,9 +56,18 @@
 	async function populateClickhouseTable(): Promise<void> {
 		status_populate = await getStatus('/api/populate');
 		products = await getData('products', 100);
-		coupons = await getData('coupons');
-		cart_products = await getData('cart_products');
-		total_cart_price = await getData('total_cart_price');
+		// set random colors for every product
+		products?.map((product) => {
+			let color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+			products_color.set(product.id, color);
+		});
+		console.log('products_color', products_color);
+		coupons = await getData('coupons', 3);
+		discount_value = coupons.reduce((acc, curr) => acc + curr.discount_value, 0);
+		cart_products = await getData('cart_products', 100);
+		let cart_costs = await getData('total_cart_cost');
+		total_cart_cost = cart_costs[0].total_cost;
+		total_taxed_cost = cart_costs[0].taxed_cost;
 	}
 </script>
 
@@ -88,7 +100,7 @@
 	<lists>
 		{#if products.length}
 			<list transition:fade>
-				<h3>Products</h3>
+				<h3 class="headline">🍒 Products</h3>
 				<product>
 					<p>ID</p>
 					<p>Price</p>
@@ -105,7 +117,9 @@
 		{/if}
 		{#if coupons.length}
 			<list transition:fade>
-				<h3>Coupons</h3>
+				<h3 class="headline">
+					<span>🎫Coupons</span> <span>Total Discount:{Math.min(discount_value, 100)}%</span>
+				</h3>
 				<product>
 					<p>ID</p>
 					<p>Discount value</p>
@@ -120,7 +134,10 @@
 		{/if}
 		{#if cart_products.length}
 			<list transition:fade>
-				<h3>Cart. Total cost: $ {total_cart_price}</h3>
+				<h3 class="headline">
+					<span>🛒 Totally:</span>
+					<span>${total_taxed_cost.toFixed(2)}<smal>(with 10% tax)</smal></span>
+				</h3>
 				<product>
 					<p>ID</p>
 					<p>Product ID</p>
