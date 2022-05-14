@@ -35,7 +35,6 @@
   },
   "dependencies": {
     "@depyronick/clickhouse-client": "^1.0.13",
-    "dotenv": "^16.0.1",
     "svelte-virtual-scroll-list": "^1.0.8",
     "uuid": "^8.3.2"
   },
