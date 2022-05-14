@@ -8,21 +8,21 @@
 
 	let ping: string;
 	let ping_result: boolean;
+	let funny = '...Allo... Allo ...hhhr... Сalling for ClickHouse.......';
 	let commas = '';
 	let ping_timer = setInterval(() => {
-		if (commas.length > 10 || commas.length == 0) {
+		if (commas.length == funny.length || commas.length == 0) {
 			getStatus('http://localhost:3000/api/ping').then((res: any) => {
 				ping = res.message;
 				ping_result = res.result;
-				commas = '';
+				commas = '.';
 				if (ping_result) {
 					clearInterval(ping_timer);
 				}
 			});
-		} else {
-			commas += '.';
 		}
-	}, 1000);
+		commas = funny.slice(0, commas.length + 1);
+	}, 500);
 
 	let status_create_tables = '';
 	let status_populate = '';
@@ -189,7 +189,7 @@
 			<circle cx="50%" cy="50%" r="5" fill="red" />
 		</svg>
 		<a href="http://localhost:8123/play" target="_blank">
-			Allo... Allo ...hhhr... Сalling for ClickHouse {commas}
+			{commas}
 		</a>
 	</status>
 {/if}
