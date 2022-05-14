@@ -1,26 +1,22 @@
 <script context="module">
-	// export const prerender = true;
-	export const load = async () => {
-		const pinging = await fetch('http://localhost:3000/api/ping');
-		let body = await pinging.json();
-		return {
-			props: {
-				ping: body.message || ''
-			}
-		};
-	};
+	export const prerender = true;
 </script>
 
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { VirtualScroll } from 'svelte-virtual-scroll-list';
 
-	export let ping: string;
+	let ping: string;
+	let ping_result: boolean;
+	getStatus('http://localhost:3000/api/ping').then((res: any) => {
+		ping = res.message;
+		ping_result = res.result;
+	});
 	let status_create_tables = '';
 	let status_populate = '';
-	let products: any[] | undefined = [];
-	let products_color: Map<String, String> | undefined = new Map();
-	let coupons: any[] | undefined = [];
+	let products: any[] = [];
+	let products_color: Map<String, String> = new Map();
+	let coupons: any[] = [];
 	let cart_products: any[] | undefined = [];
 	let total_cart_cost = 0;
 	let total_taxed_cost = 0;
@@ -30,17 +26,16 @@
 		try {
 			const response = await fetch(url);
 			let body = await response.json();
-			return body.message;
+			return body;
 		} catch (error) {
 			console.log(error);
 			return 'Sorry. Some error. Try again later';
 		}
 	}
-	async function getData(datatype: string, limit = 10): Promise<Array> {
+	async function getData(datatype: string, limit = 10): Promise<any> {
 		try {
 			const response = await fetch(`/api/getdata/${datatype}-${limit}`);
 			let body = await response.json();
-			// console.log(body);
 			return body.data;
 		} catch (error) {
 			console.log(error);
@@ -49,18 +44,19 @@
 	}
 
 	async function createClickhouseTable(): Promise<void> {
-		status_create_tables = await getStatus('/api/create_table');
+		let body: any = await getStatus('/api/create_table');
+		status_create_tables = body.message;
 	}
 
 	async function populateClickhouseTable(): Promise<void> {
-		status_populate = await getStatus('/api/populate');
+		let body: any = await getStatus('/api/populate');
+		status_populate = body.message;
 		products = await getData('products', 100);
 		// set random colors for every product
 		products?.map((product) => {
 			let color = '#' + Math.floor(Math.random() * 16777215).toString(16);
 			products_color.set(product.id, color);
 		});
-		console.log('products_color', products_color);
 		coupons = await getData('coupons', 3);
 		discount_value = coupons.reduce((acc, curr) => acc + curr.discount_value, 0);
 		cart_products = await getData('cart_products', 100);
@@ -74,7 +70,7 @@
 	SvelteKit & ClickHouse DB
 	<small>Demo app</small>
 </h1>
-{#if ping}
+{#if ping_result}
 	<div id="form">
 		<status>
 			<svg width="10" height="10">
@@ -176,11 +172,11 @@
 		{/if}
 	</lists>
 {:else}
-	<status transition:fade>
+	<status>
 		<svg width="10" height="10">
 			<circle cx="50%" cy="50%" r="5" fill="red" />
 		</svg>
-		<a href="http://localhost:8123" target="_blank"> No connection to ClickHouse </a>
+		<a href="http://localhost:8123/play" target="_blank"> No connection to ClickHouse </a>
 	</status>
 {/if}
 
@@ -199,6 +195,7 @@
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
+		font-size: clamp(11px, 1.5vw, 2.7vmin);
 	}
 	product {
 		font-size: small;
