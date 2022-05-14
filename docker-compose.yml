@@ -2,30 +2,39 @@ version: "3.7"
 services:
 
   sveltekit:
-    image: sveltekit
+    container_name: sveltekit
     restart: on-failure
     build:
       context: ./sveltekit
       dockerfile: ./Dockerfile.dev
+    environment:
+      - CLICKHOUSE_HOST=10.222.1.3
     ports:
       - 3000:3000
       - 24678:24678
     volumes:
       - ./sveltekit/:/usr/src/app
       - /usr/src/app/node_modules
+    links:
+      - ch_server:ch_server
+    depends_on:
+      - ch_server
     networks:
         - ch_ntw
-
+            
   ch_server:
+    hostname: ch_server
+    container_name: ch_server
     image: yandex/clickhouse-server
     ports:
-      - ${CLICKHOUSE_PORT}:${CLICKHOUSE_PORT}
+      - 8123:8123
     volumes:
       - ./clickhouse:/var/lib/clickhouse
     networks:
         - ch_ntw
 
   ch_client:
+    container_name: ch_client
     image: yandex/clickhouse-client
     entrypoint:
       - /bin/sleep
