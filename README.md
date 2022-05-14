@@ -6,6 +6,8 @@
 ```
 docker-compose -f docker-compose.yml up -d
 ```
+When Clickhouse starts up (1-5 minutes), you can open the playground [http://localhost:8123/play](http://localhost:8123/play) or open [http://localhost:3000/]( http://localhost:3000/) in your browser.
+
 
 Tasks:
 
