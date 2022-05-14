@@ -8,10 +8,22 @@
 
 	let ping: string;
 	let ping_result: boolean;
-	getStatus('http://localhost:3000/api/ping').then((res: any) => {
-		ping = res.message;
-		ping_result = res.result;
-	});
+	let commas = '';
+	let ping_timer = setInterval(() => {
+		if (commas.length > 10 || commas.length == 0) {
+			getStatus('http://localhost:3000/api/ping').then((res: any) => {
+				ping = res.message;
+				ping_result = res.result;
+				commas = '';
+				if (ping_result) {
+					clearInterval(ping_timer);
+				}
+			});
+		} else {
+			commas += '.';
+		}
+	}, 1000);
+
 	let status_create_tables = '';
 	let status_populate = '';
 	let products: any[] = [];
@@ -25,8 +37,8 @@
 	async function getStatus(url: string): Promise<string> {
 		try {
 			const response = await fetch(url);
-			let body = await response.json();
-			return body;
+			let data = await response.json();
+			return data;
 		} catch (error) {
 			console.log(error);
 			return 'Sorry. Some error. Try again later';
@@ -35,8 +47,8 @@
 	async function getData(datatype: string, limit = 10): Promise<any> {
 		try {
 			const response = await fetch(`/api/getdata/${datatype}-${limit}`);
-			let body = await response.json();
-			return body.data;
+			let data = await response.json();
+			return data.data;
 		} catch (error) {
 			console.log(error);
 			return ['Sorry. Some error. Try again later'];
@@ -44,13 +56,13 @@
 	}
 
 	async function createClickhouseTable(): Promise<void> {
-		let body: any = await getStatus('/api/create_table');
-		status_create_tables = body.message;
+		let data: any = await getStatus('/api/create_table');
+		status_create_tables = data.message;
 	}
 
 	async function populateClickhouseTable(): Promise<void> {
-		let body: any = await getStatus('/api/populate');
-		status_populate = body.message;
+		let data: any = await getStatus('/api/populate');
+		status_populate = data.message;
 		products = await getData('products', 100);
 		// set random colors for every product
 		products?.map((product) => {
@@ -176,7 +188,9 @@
 		<svg width="10" height="10">
 			<circle cx="50%" cy="50%" r="5" fill="red" />
 		</svg>
-		<a href="http://localhost:8123/play" target="_blank"> No connection to ClickHouse </a>
+		<a href="http://localhost:8123/play" target="_blank">
+			Allo... Allo ...hhhr... Сalling for ClickHouse {commas}
+		</a>
 	</status>
 {/if}
 
