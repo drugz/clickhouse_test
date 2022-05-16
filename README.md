@@ -8,7 +8,7 @@
 ```
 docker-compose -f docker-compose.yml up -d
 ```
-When Clickhouse starts up (1-5 minutes), you can open the playground [http://localhost:8123/play](http://localhost:8123/play) or open [http://localhost:3000/]( http://localhost:3000/) in your browser.
+When Clickhouse starts up (1-5 minutes), you can open the playground [localhost:8123/play](http://localhost:8123/play) or open [localhost:3000/]( http://localhost:3000/) in your browser.
 
 
 Tasks:
@@ -32,4 +32,5 @@ Tasks:
 - total_cart_price = discount_total + no_discount_total + tax (10%)
 
 
-As a bonus you might make a very simple Svelte front page illustrating this calling CH via HTTP API, but I understand that is probably much more time consuming, so not required.
+As a bonus, a very simple Svelte home page has been added, illustrating the CH call via the HTTP API.
+[@depyronick/clickhouse-client](https://github.com/depyronick/clickhouse-client)
