@@ -1,5 +1,7 @@
-# clickhouse_test
+# Docker + SvelteKit + Clickhouse
 ## Test project
+
+![Cover](https://github.com/drugz/sveltekit-clickhouse/raw/main/cover.jpg)
 
 ### Run docker container with local Clickhouse and SvelteKit
 <!-- Make copy of .env.example and rename it to .env. -->
